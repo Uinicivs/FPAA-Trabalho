@@ -5,7 +5,7 @@ from functools import lru_cache
 def lcs_sequences(data_one: str, data_two: str) -> List[str]:
     len_one, len_two = len(data_one), len(data_two)
 
-    #
+    # first step: build dp table
     dp = [[0] * (len_two + 1) for _ in range(len_one + 1)]
 
     for i in range(len_one):
@@ -15,7 +15,7 @@ def lcs_sequences(data_one: str, data_two: str) -> List[str]:
             else:
                 dp[i + 1][j + 1] = max(dp[i][j + 1], dp[i + 1][j])
 
-    # Passo 2: Backtrack para reconstruir todas as subsequências
+    # second step: backtrack the solutions
     @lru_cache(maxsize=None)
     def backtrack(i: int, j: int) -> Set[str]:
         if i == 0 or j == 0:
@@ -33,7 +33,6 @@ def lcs_sequences(data_one: str, data_two: str) -> List[str]:
     sequences = backtrack(len_one, len_two)
     max_len = dp[len_one][len_two]
 
-    # Reverter sequências (pois foram construídas de trás pra frente) e filtrar as maiores
     return sorted(seq for seq in sequences if len(seq) == max_len)
 
 
