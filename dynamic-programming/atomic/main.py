@@ -1,11 +1,14 @@
-def lcs_sequences(data_one: str, data_two: str):
+from typing import List
+
+
+def lcs_sequences(data_one: str, data_two: str) -> List[str]:
     len_one, len_two = len(data_one), len(data_two)
 
     """
     INICIALIZAÇÃO DA MATRIZ
 
         • Cria-se uma matriz dp com dimensões:
-            ([tamanho da primeira string]+1) x (tamanho da segunda string+1) (um extra para lidar com prefixos vazios).
+            ([tamanho da primeira string]+1)x([tamanho da segunda string]+1) (um extra para lidar com prefixos vazios).
 
         • Inicializa-se todas as células com um conjunto ('set' em python) contendo uma string vazia. Um conjunto é uma
         coleção que não é ordenada, imutável e não indexada.
@@ -19,7 +22,7 @@ def lcs_sequences(data_one: str, data_two: str):
             • Se o caractere i da primeira string e o caractere j da segunda string forem iguais:
                 Para cada conjunto em dp[i][j], adiciona-se o caractere comum ao final.
 
-            • Se são diferentes, buscamos herdar o com as subsequências mais longas entre dp[i+1][j] (esquerda)
+            • Se são diferentes, busca-se herdar o com as subsequências mais longas entre dp[i+1][j] (esquerda)
             e dp[i][j+1] (acima):
                     | dp[i + 1][j]: célula à esquerda da atual
                     | dp[i][j + 1]: célula acima da atual
