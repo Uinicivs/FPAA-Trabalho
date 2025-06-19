@@ -1,75 +1,38 @@
-function getSubseqLength(set) {
-  for (const s of set) return s.length;
-  return 0;
-}
+const lcsWithDP = require('../services/dpService')
 
-function lcsAll(s1, s2) {
-    const n = s1.length;
-  const m = s2.length;
-
-  // dp[i][j] = conjunto de subsequências comuns mais longas até os prefixos s1[0:i] e s2[0:j]
-  const dp = Array.from({ length: n + 1 }, () =>
-    Array.from({ length: m + 1 }, () => new Set([""]))
-  );
-
-  // dpLen[i][j] = matriz de inteiros com os tamanhos máximos das subsequências em cada célula
-  const dpLen = Array.from({ length: n + 1 }, () =>
-    Array.from({ length: m + 1 }, () => 0)
-  );
-
-  for (let i = 0; i < n; i++) {
-    for (let j = 0; j < m; j++) {
-      if (s1[i] === s2[j]) {
-        // Caso os caracteres combinem, adiciona s1[i] às subsequências anteriores
-        for (const seq of dp[i][j]) {
-          dp[i + 1][j + 1].add(seq + s1[i]);
-        }
-      } else {
-        // Caso contrário, compara os caminhos da esquerda e de cima
-        const left = getSubseqLength(dp[i + 1][j]);
-        const up = getSubseqLength(dp[i][j + 1]);
-
-        if (left > up) {
-          dp[i + 1][j + 1] = new Set(dp[i + 1][j]);
-        } else if (up > left) {
-          dp[i + 1][j + 1] = new Set(dp[i][j + 1]);
-        } else {
-          dp[i + 1][j + 1] = new Set([...dp[i + 1][j], ...dp[i][j + 1]]);
-        }
-      }
-
-      // Atualiza a matriz numérica com o comprimento máximo encontrado
-      const maxLen = Math.max(
-        ...Array.from(dp[i + 1][j + 1]).map((s) => s.length),
-        0
-      );
-      dpLen[i + 1][j + 1] = maxLen;
-    }
-  }
-
-  // Extrai as subsequências com maior comprimento
-  const result = Array.from(dp[n][m]);
-  const maxLength = Math.max(...result.map((s) => s.length));
-  const longest = result.filter((s) => s.length === maxLength).sort();
-  const dpOut = dp.map((row, i) =>
-    row.map((set, j) => ({
-        len: dpLen[i][j],
-        set: Array.from(set).filter(s => s.length === dpLen[i][j])
-    }))
-    );
-
-  return { sequences: longest, dp: dpOut, maxLength };
-}
 
 exports.process = (req, res) => {
-  const { dataOne, dataTwo } = req.body;
-  const { sequences, dp, maxLength } = lcsAll(dataOne, dataTwo);
+    let { dataOne, dataTwo } = req.body;
 
-  res.render("dpView", {
-    dataOne,
-    dataTwo,
-    sequences,
-    dp,
-    maxLen: maxLength
-  });
+    dataOne = Array.isArray(dataOne) ? dataOne : [dataOne];
+    dataTwo = Array.isArray(dataTwo) ? dataTwo : [dataTwo];
+
+    if (!dataOne || !dataTwo || dataOne.length !== dataTwo.length) {
+        return res.status(400).send("Dados de entrada inválidos.");
+    }
+    
+    if (dataOne.length > 10) {
+         return res.status(400).send("O número máximo de pares é 10.");
+    }
+
+    const results = [];
+
+    for (let i = 0; i < dataOne.length; i++) {
+        const d1 = dataOne[i].trim();
+        const d2 = dataTwo[i].trim();
+
+        if (d1.length > 80 || d1.length < 1 || d2.length > 80 || d2.length < 1) {
+            return res.status(400).send(`O Par #${i+1} contém strings com comprimento inválido.`);
+        }
+        
+        const lcsResult = lcsWithDP(d1, d2);
+
+        results.push({
+            dataOne: d1,
+            dataTwo: d2,
+            ...lcsResult
+        });
+    }
+
+    res.render('dpView', { results: results });
 };

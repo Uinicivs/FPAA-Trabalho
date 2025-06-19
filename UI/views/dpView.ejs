@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="UTF-8">
-    <title>LCS com Programação Dinâmica (sem Backtracking)</title>
+    <title>Resultados - LCS com Programação Dinâmica</title>
     <link href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" rel="stylesheet">
     <style>
         td {
@@ -31,85 +31,100 @@
             width: 100%;
             overflow-x: auto;
         }
-    </style>
 
+        article header {
+            padding-bottom: 0;
+        }
+    </style>
 </head>
 
 <body>
     <main class="container">
-        <h1>LCS - Programação Dinâmica Sem Backtracking</h1>
+        <h1>Resultados - LCS (Sem Backtracking)</h1>
 
-        <section>
-            <p><strong>String 1:</strong> <code><%= dataOne %></code></p>
-            <p><strong>String 2:</strong> <code><%= dataTwo %></code></p>
-        </section>
+        <% results.forEach((result, pairIndex)=> { %>
+            <article>
+                <header>
+                    <h2>Par de Dados #<%= pairIndex + 1 %>
+                    </h2>
+                </header>
 
-        <section>
-            <h3>Subsequências Comuns Mais Longas</h3>
-            <ul>
-                <% sequences.forEach(seq=> { %>
-                    <li><code><%= seq %></code></li>
-                    <% }) %>
-            </ul>
-        </section>
+                <section>
+                    <p><strong>1º Conjunto:</strong> <code><%= result.dataOne %></code></p>
+                    <p><strong>2º Conjunto:</strong> <code><%= result.dataTwo %></code></p>
+                </section>
 
-        <section>
-            <h3>Tabela <code>dp[i][j]</code> (com visualização dos sets)</h3>
-            <p>
-                Cada célula mostra:
-            <ul>
-                <li><strong>Corpo:</strong> valor <code>dp[i][j]</code> (comprimento da LCS até o ponto)</li>
-                <li><strong>Acordeão:</strong> subsequências construídas até esse ponto (Set de strings)</li>
-            </ul>
-            </p>
+                <section>
+                    <h3>Subsequências Comuns Mais Longas</h3>
+                    <ul>
+                        <% result.sequences.forEach(seq=> { %>
+                            <li><code><%= seq %></code></li>
+                            <% }) %>
+                    </ul>
+                </section>
 
-            <div class="dp-table">
-                <table role="grid">
-                    <thead>
-                        <tr>
-                            <th></th>
-                            <th></th>
-                            <% for (let j=0; j < dataTwo.length; j++) { %>
-                                <th>
-                                    <%= dataTwo[j] %>
-                                </th>
-                                <% } %>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% for (let i=0; i <=dataOne.length; i++) { %>
-                            <tr>
-                                <th>
-                                    <%= i> 0 ? dataOne[i - 1] : '' %>
-                                </th>
-                                <% for (let j=0; j <=dataTwo.length; j++) { const len=dp[i][j].len; const
-                                    seqs=dp[i][j].set; const isMatch=i> 0 && j > 0 && dataOne[i - 1] === dataTwo[j - 1];
-                                    const isMax = len === maxLen;
-                                    %>
-                                    <td>
-                                        <div><strong>
-                                                <%= len %>
-                                            </strong></div>
-                                        <details>
-                                            <summary><small>
-                                                    <%= seqs.length %> seq(s)
-                                                </small></summary>
-                                            <div class="accordion-content">
-                                                <% seqs.forEach(s=> { %>
-                                                    <code><%= s %></code>
-                                                    <% }) %>
-                                            </div>
-                                        </details>
-                                    </td>
+                <section>
+                    <h3>Tabela <code>dp[i][j]</code> (com visualização dos sets)</h3>
+                    <p>
+                        Cada célula mostra:
+                    <ul>
+                        <li><strong>Corpo:</strong> valor <code>dp[i][j]</code> (comprimento da LCS até o ponto)</li>
+                        <li><strong>Acordeão:</strong> subsequências construídas até esse ponto (Set de strings) </li>
+                    </ul>
+                    </p>
+
+                    <div class="dp-table">
+                        <table role="grid">
+                            <thead>
+                                <tr>
+                                    <th></th>
+                                    <th></th>
+                                    <% for (let j=0; j < result.dataTwo.length; j++) { %>
+                                        <th>
+                                            <%= result.dataTwo[j] %>
+                                        </th>
+                                        <% } %>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% for (let i=0; i <=result.dataOne.length; i++) { %>
+                                    <tr>
+                                        <th>
+                                            <%= i> 0 ? result.dataOne[i - 1] : '' %>
+                                        </th>
+                                        <% for (let j=0; j <=result.dataTwo.length; j++) { const
+                                            len=result.dp[i][j].len; const seqs=result.dp[i][j].set; const
+                                            isMax=len===result.maxLen; %>
+                                            <td>
+                                                <div><strong>
+                                                        <%= len %>
+                                                    </strong></div>
+                                                <details>
+                                                    <summary><small>
+                                                            <%= seqs.length %> seq(s)
+                                                        </small></summary>
+                                                    <div class="accordion-content">
+                                                        <% seqs.forEach(s=> { %>
+                                                            <code><%= s %></code>
+                                                            <% }) %>
+                                                    </div>
+                                                </details>
+                                            </td>
+                                            <% } %>
+                                    </tr>
                                     <% } %>
-                            </tr>
-                            <% } %>
-                    </tbody>
-                </table>
-            </div>
-        </section>
+                            </tbody>
+                        </table>
+                    </div>
+                </section>
+            </article>
 
-        <a href="/">← Voltar</a>
+            <% if (pairIndex < results.length - 1) { %>
+                <hr>
+                <% } %>
+                    <% }) %>
+
+                        <a href="/" role="button">← Voltar</a>
     </main>
 </body>
 

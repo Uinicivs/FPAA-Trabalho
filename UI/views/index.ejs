@@ -3,67 +3,123 @@
 
 <head>
     <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" rel="stylesheet" />
-    <title>LCS Demo</title>
+    <title>FPAA</title>
+    <style>
+        main.container {
+            max-width: 800px;
+            margin: 2rem auto;
+        }
+
+        h1,
+        h4 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+        }
+
+        hr {
+            margin: 2rem 0;
+        }
+
+        .input-section {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: var(--pico-background-color);
+            border-radius: var(--pico-border-radius);
+            box-shadow: var(--pico-box-shadow);
+        }
+
+        .input-section .grid {
+            gap: 2rem;
+            align-items: start;
+        }
+
+        fieldset {
+            margin-bottom: 0;
+            padding: 1rem;
+        }
+
+        #input-sets fieldset {
+            background: var(--pico-background-color);
+            border-radius: var(--pico-border-radius);
+            padding: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        button[type="submit"] {
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        @media (min-width: 768px) {
+            .input-section .grid {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
 </head>
 
 <body>
     <main class="container">
-        <h1>Subsequência Comum Mais Longa</h1>
-
+        <h1>Descobrindo padrões</h1>
+        <h4>a jornada para sincronizar dados complexos</h4>
+        <hr>
         <form id="lcs-form" method="POST">
-            <label for="algorithm">
-                Escolha o algoritmo:
-                <select name="algorithm" id="algorithm" required>
-                    <option value="dp">Programação Dinâmica (sem backtracking)</option>
-                    <option value="dpbt">Programação Dinâmica + Backtracking</option>
-                </select>
-            </label>
-
-            <label for="count">
-                Quantidade de pares (máximo 10):
-                <input type="number" name="count" id="count" min="1" max="10" required />
-            </label>
-
-            <div id="input-sets">
-                <!-- inputs aqui via JS -->
-            </div>
-
+            <section class="input-section">
+                <div class="grid">
+                    <fieldset>
+                        <legend>Escolha o algoritmo</legend>
+                        <label>
+                            <input type="radio" name="algorithm" value="dp" />
+                            Programação Dinâmica (sem backtracking)
+                        </label>
+                        <label>
+                            <input type="radio" name="algorithm" value="dpbt" checked />
+                            Programação Dinâmica + Backtracking
+                        </label>
+                    </fieldset>
+                    <label for="count">
+                        Quantidade de pares (máximo 10):
+                        <input type="number" name="count" id="count" min="1" max="10" required />
+                    </label>
+                </div>
+            </section>
+            <div id="input-sets"></div>
             <button type="submit">Calcular</button>
         </form>
     </main>
+    <script>
+        const countInput = document.getElementById("count");
+        const inputSetsContainer = document.getElementById("input-sets");
+        const form = document.getElementById("lcs-form");
+
+        countInput.addEventListener("input", () => {
+            const count = parseInt(countInput.value);
+            inputSetsContainer.innerHTML = "";
+
+            if (isNaN(count) || count < 1 || count > 10) return;
+
+            for (let i = 0; i < count; i++) {
+                inputSetsContainer.innerHTML += `
+                    <fieldset role="group">
+                        <legend>Par #${i + 1}</legend>
+                        <label>1º Conjunto:
+                            <input name="dataOne" type="text" maxlength="80" minlength="1" required />
+                        </label>
+                        <label>2º Conjunto:
+                            <input name="dataTwo" type="text" maxlength="80" minlength="1" required />
+                        </label>
+                    </fieldset>
+                `;
+            }
+        });
+
+        form.addEventListener("submit", (e) => {
+            const algorithm = document.querySelector('input[name="algorithm"]:checked').value;
+            form.action = `/${algorithm}`;
+        });
+    </script>
 </body>
-
-<script>
-    const countInput = document.getElementById("count");
-    const inputSetsContainer = document.getElementById("input-sets");
-    const form = document.getElementById("lcs-form");
-
-    countInput.addEventListener("input", () => {
-        const count = parseInt(countInput.value);
-        inputSetsContainer.innerHTML = "";
-
-        if (isNaN(count) || count < 1 || count > 10) return;
-
-        for (let i = 0; i < count; i++) {
-            inputSetsContainer.innerHTML += `
-                <fieldset role="group">
-                <legend>Par #${i + 1}</legend>
-                <label>String 1:
-                    <input name="dataOne" type="text" maxlength="80" minlength="1" required />
-                </label>
-                <label>String 2:
-                    <input name="dataTwo" type="text" maxlength="80" minlength="1" required />
-                </label>
-                </fieldset>
-            `;
-        }
-    });
-
-    form.addEventListener("submit", (e) => {
-        const algorithm = document.getElementById("algorithm").value;
-        form.action = `/${algorithm}`; // Envia para /dp ou /dpbt
-    });
-</script>
 
 </html>
