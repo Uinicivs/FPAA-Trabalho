@@ -1,5 +1,14 @@
 from typing import List, Set, Tuple
 
+"""
+    AUTORES: Augusto Amaral, Guilherme Siqueira, Henrique Borelli, Julio Santos, Otávio Gonçalves, Pedro Ribeiro,
+             Vinicius Alves, Walyson Moises
+
+    VERSÃO: V1.0
+
+    DATA: 19/06/2025
+"""
+
 
 def lcs_sequences(data_one: str, data_two: str) -> List[str]:
     len_one, len_two = len(data_one), len(data_two)
