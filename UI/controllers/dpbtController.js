@@ -1,4 +1,4 @@
-function lcsWithDP(dataOne, dataTwo) {
+function lcsWithDPBT(dataOne, dataTwo) {
   const lenOne = dataOne.length;
   const lenTwo = dataTwo.length;
   const dp = Array.from({ length: lenOne + 1 }, () => Array(lenTwo + 1).fill(0));
@@ -63,8 +63,8 @@ function lcsWithDP(dataOne, dataTwo) {
   return { dp, sequences: filtered, steps, allPaths };
 }
 
-exports.processLCS = (req, res) => {
+exports.process = (req, res) => {
   const { dataOne, dataTwo } = req.body;
-  const { dp, sequences, steps, allPaths } = lcsWithDP(dataOne, dataTwo);
-  res.render('result', { dataOne, dataTwo, dp, sequences, steps, allPaths });
+  const { dp, sequences, steps, allPaths } = lcsWithDPBT(dataOne, dataTwo);
+  res.render('dpbtView', { dataOne, dataTwo, dp, sequences, steps, allPaths });
 };

@@ -10,16 +10,60 @@
 <body>
     <main class="container">
         <h1>Subsequência Comum Mais Longa</h1>
-        <form action="/result" method="POST">
-            <label>String 1:
-                <input name="dataOne" type="text" required />
+
+        <form id="lcs-form" method="POST">
+            <label for="algorithm">
+                Escolha o algoritmo:
+                <select name="algorithm" id="algorithm" required>
+                    <option value="dp">Programação Dinâmica (sem backtracking)</option>
+                    <option value="dpbt">Programação Dinâmica + Backtracking</option>
+                </select>
             </label>
-            <label>String 2:
-                <input name="dataTwo" type="text" required />
+
+            <label for="count">
+                Quantidade de pares (máximo 10):
+                <input type="number" name="count" id="count" min="1" max="10" required />
             </label>
+
+            <div id="input-sets">
+                <!-- inputs aqui via JS -->
+            </div>
+
             <button type="submit">Calcular</button>
         </form>
     </main>
 </body>
+
+<script>
+    const countInput = document.getElementById("count");
+    const inputSetsContainer = document.getElementById("input-sets");
+    const form = document.getElementById("lcs-form");
+
+    countInput.addEventListener("input", () => {
+        const count = parseInt(countInput.value);
+        inputSetsContainer.innerHTML = "";
+
+        if (isNaN(count) || count < 1 || count > 10) return;
+
+        for (let i = 0; i < count; i++) {
+            inputSetsContainer.innerHTML += `
+                <fieldset role="group">
+                <legend>Par #${i + 1}</legend>
+                <label>String 1:
+                    <input name="dataOne" type="text" maxlength="80" minlength="1" required />
+                </label>
+                <label>String 2:
+                    <input name="dataTwo" type="text" maxlength="80" minlength="1" required />
+                </label>
+                </fieldset>
+            `;
+        }
+    });
+
+    form.addEventListener("submit", (e) => {
+        const algorithm = document.getElementById("algorithm").value;
+        form.action = `/${algorithm}`; // Envia para /dp ou /dpbt
+    });
+</script>
 
 </html>
