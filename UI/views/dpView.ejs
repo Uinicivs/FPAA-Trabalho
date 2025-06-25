@@ -40,7 +40,7 @@
 
 <body>
     <main class="container">
-        <h1>Resultados - LCS (sem backtracking)</h1>
+        <h1>Resultados - LCS (Sem Backtracking)</h1>
 
         <% results.forEach((result, pairIndex)=> { %>
             <article>
@@ -64,14 +64,26 @@
                 </section>
 
                 <section>
-                    <h3>Tabela resultante da Programação Dinâmica</h3>
+                    <h3>Tabela resultante da Programação Dinâmica com Conjuntos (Sets)</h3>
                     <p>
-                        Cada célula mostra:
-                    <ul>
-                        <li><strong>Corpo:</strong> valor <code>dp[i][j]</code> (comprimento da LCS até o ponto)</li>
-                        <li><strong>Acordeão:</strong> subsequências construídas até esse ponto (Set de strings) </li>
-                    </ul>
+                        Cada célula da tabela <code>dp[i][j]</code> armazena um <strong>conjunto de
+                            subsequências</strong> comuns mais longas
+                        entre os prefixos <code>data_one[0:i]</code> e <code>data_two[0:j]</code>.
                     </p>
+                    <p>
+                        A visualização apresenta:
+                    </p>
+                    <ul>
+                        <li><strong>Corpo da célula:</strong> comprimento da LCS até o ponto atual (determinado pela
+                            maior string do conjunto)</li>
+                        <li><strong>Acordeão expansível:</strong> lista de todas as subsequências armazenadas no set
+                            daquela célula</li>
+                    </ul>
+                    <p>
+                        Como as subsequências são construídas iterativamente durante o preenchimento da matriz, não é
+                        necessário um processo posterior de reconstrução via backtracking.
+                    </p>
+
 
                     <div class="dp-table">
                         <table role="grid">
