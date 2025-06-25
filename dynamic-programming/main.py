@@ -9,7 +9,6 @@ from typing import List
     DATA: 19/06/2025
 """
 
-
 def lcs_sequences(data_one: str, data_two: str) -> List[str]:
     len_one, len_two = len(data_one), len(data_two)
 
@@ -22,7 +21,7 @@ def lcs_sequences(data_one: str, data_two: str) -> List[str]:
         • Inicializa-se todas as células com um conjunto ('set' em python) contendo uma string vazia. Um conjunto é uma
         coleção que não é ordenada, imutável e não indexada.
     """
-    dp = [[{""} for _ in range(len_one + 1)] for _ in range(len_two + 1)]
+    dp = [[{""} for _ in range(len_one + 1)] for _ in range(len_two + 1)] # O(n × m)
 
     """
     PREENCHIMENTO DA MATRIZ
@@ -45,21 +44,22 @@ def lcs_sequences(data_one: str, data_two: str) -> List[str]:
                         a referência
                         • Se forem iguais, é feita a união de ambos
     """
+    # O(n × m)
     for i in range(len_one):
         for j in range(len_two):
             if data_one[i] == data_two[j]:
-                for seq in dp[i][j]:
-                    dp[i + 1][j + 1].add(seq + data_one[i])
+                for seq in dp[i][j]:    # O(S), considerando S como o número de subsequências em dp[i][j]
+                    dp[i + 1][j + 1].add(seq + data_one[i]) # O(L), onde L é o comprimento da subsequência
             else:
-                left = len(next(iter(dp[i + 1][j]), ""))
-                upper = len(next(iter(dp[i][j + 1]), ""))
+                left = len(next(iter(dp[i + 1][j]), ""))    # O(1)
+                upper = len(next(iter(dp[i][j + 1]), ""))   # O(1)
 
                 if left > upper:
-                    dp[i + 1][j + 1] = dp[i + 1][j].copy()
+                    dp[i + 1][j + 1] = dp[i + 1][j].copy()  # O(S × L)
                 elif left < upper:
-                    dp[i + 1][j + 1] = dp[i][j + 1].copy()
+                    dp[i + 1][j + 1] = dp[i][j + 1].copy()  # O(S × L)
                 else:
-                    dp[i + 1][j + 1] = dp[i + 1][j].union(dp[i][j + 1])
+                    dp[i + 1][j + 1] = dp[i + 1][j].union(dp[i][j + 1]) # O(S × L)
 
     """
     ENCONTRAR AS MAIORES SUBSEQUÊNCIAS
@@ -71,10 +71,14 @@ def lcs_sequences(data_one: str, data_two: str) -> List[str]:
         ordenado em ordem alfabética.
     """
     final_seqs = dp[len_one][len_two]
-    max_len = max(len(seq) for seq in final_seqs)
-    result = sorted({seq for seq in final_seqs if len(seq) == max_len})
+    max_len = max(len(seq) for seq in final_seqs)   # O(S × L)
+    result = sorted({seq for seq in final_seqs if len(seq) == max_len}) # O(S × L × log(S))
     return result
 
+# Análise assintótica total:
+# Melhor caso: O(n × m) - strings muito diferentes
+# Caso médio: O(n × m × S × L) - S = número médio de subsequências, L = comprimento médio
+# Pior caso: O(n × m × 2^min(n,m) × min(n,m)) - strings similares com caracteres repetidos
 
 def main():
     D = int(input("Número de pares de conjuntos de dados: "))
