@@ -179,8 +179,8 @@ A função `backtrack(i, j)` é chamada no máximo uma vez para cada par (i, j) 
 
 | Abordagem                   | Melhor Caso    | Caso Médio         | Pior Caso                          |
 | --------------------------- | -------------- | ------------------ | ---------------------------------- |
-| Apenas Programação Dinâmica | `O(M × N)`     | `O(M × N × S × L)` | `O(M × N × 2^min(M,N) × min(M,N))` |
-| DP + Backtracking           | `O(M × N + L)` | `O(M × N + K × L)` | `O(M × N + 2^min(M,N) × min(M,N))` |
+| Apenas Programação Dinâmica | `O(N × M)`     | `O(N × M × S × L)` | `O(N × M × 2^min(N,M) × min(N,M))` |
+| DP + Backtracking           | `O(N × M + L)` | `O(N × M + K × L)` | `O(N × M + 2^min(N,M) × min(N,M))` |
 
 ---
 
