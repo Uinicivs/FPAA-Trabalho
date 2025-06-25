@@ -9,9 +9,9 @@ from typing import List, Set, Tuple
     DATA: 19/06/2025
 """
 
-
 def lcs_sequences(data_one: str, data_two: str) -> List[str]:
-    len_one, len_two = len(data_one), len(data_two)
+    # Para análise da complexidade, utilizaremos n = len_one e m = len_two.
+    len_one, len_two = len(data_one), len(data_two) # O(1)
 
     """
     INICIALIZAÇÃO DA MATRIZ
@@ -21,7 +21,7 @@ def lcs_sequences(data_one: str, data_two: str) -> List[str]:
 
         • Inicializa-se todas as células com 0.
     """
-    dp = [[0] * (len_two + 1) for _ in range(len_one + 1)]
+    dp = [[0] * (len_two + 1) for _ in range(len_one + 1)] # O(n × m)
 
     """
     PREENCHIMENTO DA MATRIZ
@@ -34,12 +34,13 @@ def lcs_sequences(data_one: str, data_two: str) -> List[str]:
             esquerda (dp[i+1][j]) é utilizado:
                 Isso significa que o caractere atual não contribui para a LCS.
     """
+    # O(n × m)
     for i in range(len_one):
         for j in range(len_two):
             if data_one[i] == data_two[j]:
                 dp[i + 1][j + 1] = dp[i][j] + 1
             else:
-                dp[i + 1][j + 1] = max(dp[i][j + 1], dp[i + 1][j])
+                dp[i + 1][j + 1] = max(dp[i][j + 1], dp[i + 1][j]) # O(1)
 
     """
     ENCONTRAR AS MAIORES SUBSEQUÊNCIAS USANDO BACKTRACKING
@@ -76,13 +77,16 @@ def lcs_sequences(data_one: str, data_two: str) -> List[str]:
             return {""}
 
         if data_one[i - 1] == data_two[j - 1]:
+            # O(K × L) onde K é o número de subsequências retornadas e L o comprimento
             return {s + data_one[i - 1] for s in backtrack(i - 1, j - 1)}
 
         result = set()
         if dp[i - 1][j] >= dp[i][j - 1]:
+            # O(K × L) para operação de união
             result |= backtrack(i - 1, j)
 
         if dp[i][j - 1] >= dp[i - 1][j]:
+            # O(K × L) para operação de união
             result |= backtrack(i, j - 1)
 
         cache[(i, j)] = result
@@ -97,8 +101,14 @@ def lcs_sequences(data_one: str, data_two: str) -> List[str]:
         apenas as maiores. Em seguida, o conjunto é ordenado alfabeticamente.
     """
     max_len = dp[len_one][len_two]
-    return sorted(seq for seq in sequences if len(seq) == max_len)
 
+    return sorted(seq for seq in sequences if len(seq) == max_len) # O(K × L × log(K))
+
+
+# Análise assintótica total:
+# Melhor caso: O(n × m + L) - apenas uma LCS
+# Caso médio: O(n × m + K × L) - K = número de LCS, L = comprimento médio
+# Pior caso: O(n × m + 2^min(n,m) × min(n,m)) - múltiplas LCS com caminhos diferentes
 
 def main():
     D = int(input("Número de pares de conjuntos de dados: "))
